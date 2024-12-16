@@ -10,7 +10,6 @@ public class MovmentController : MonoBehaviour
     private Animator animator;
     private NavMeshAgent agent;
     public GameObject camerapivot;
-    public AudioClip shieldSound, infernoSound, fireballSound, itemPickupSound, damageSound, healingSound, deathSound;
     [SerializeField] 
     ParticleSystem clickEffect;
 

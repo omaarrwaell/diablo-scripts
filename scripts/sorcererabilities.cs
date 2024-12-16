@@ -31,6 +31,10 @@ public class sorcererabilities : MonoBehaviour
     public bool cloneactive = false;
 
     public float healthpotions = 0;
+    public float runefragments = 0;
+
+
+    public GameObject portal;
 
 
     // Start is called before the first frame update
@@ -41,6 +45,7 @@ public class sorcererabilities : MonoBehaviour
         health = 100f;
         newhealth = 100f;
        
+        portal.SetActive(false);
     }
 
     // Update is called once per frame
@@ -87,6 +92,7 @@ public class sorcererabilities : MonoBehaviour
 
             
         }
+
         if (Input.GetKeyDown(KeyCode.F))
         {
 
@@ -95,7 +101,7 @@ public class sorcererabilities : MonoBehaviour
                 healthpotions -= 1;
                 newhealth += (health / 2);
             }
-
+           
 
         }
 
@@ -104,7 +110,12 @@ public class sorcererabilities : MonoBehaviour
             newhealth = health;
         }
 
+        if (runefragments == 3)
+        {
+            portal.SetActive(true);
+        }
 
+        healthslider.value = (newhealth / health);
     }
 
     private void explodeclone()

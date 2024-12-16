@@ -38,7 +38,21 @@ public class barbarianabilities : MonoBehaviour
     private bool bashstate;
 
     public barbarianfollowtarget goblin;
+    public barbarianDemonController demon;
 
+
+    public bool maelstormactive = false;
+    public bool shieldactive = false;
+    public bool chargeactive = false;
+
+    public float healthpotions = 0;
+    public float runefragments = 0;
+
+    public GameObject portal;
+
+    private string target;
+
+    public barbarianunlockabilities unlockabilities;
     // Start is called before the first frame update
     void Start()
     {
@@ -52,6 +66,7 @@ public class barbarianabilities : MonoBehaviour
         maelstormstate = false;
         bashstate = false;
         agent = GetComponent<NavMeshAgent>();
+        portal.SetActive(false);
 
     }
 
@@ -60,32 +75,51 @@ public class barbarianabilities : MonoBehaviour
     {
         healthslider.value = (newhealth / health);
 
-        if (Input.GetKeyDown(KeyCode.W))
+        if (Input.GetKeyDown(KeyCode.W) && unlockabilities.shieldunlocked)
         {
             shield.SetActive(true);
             shieldstate = true;
             activateshield();
+
+
+            shieldactive = true;
         }
 
         healthtext.text = newhealth + "/" + health;
 
-        if (Input.GetKeyDown(KeyCode.Q))
+        if (Input.GetKeyDown(KeyCode.Q) && unlockabilities.maelstormunlocked)
         {
             maelstorm = true;
             animator.SetBool("maelstorm", true);
+            
             activatemaelstorm();
+
+            maelstormactive = true;
         }
 
-        if (Input.GetKeyDown(KeyCode.E))
+        if (Input.GetKeyDown(KeyCode.E) && unlockabilities.chargeunlocked)
         {
             activatecharge = true;
             //agent.speed = 7.0f;
+            chargeactive = true;
         }
+
+
+
+
         if (bashstate)
         {
-            goblin.newhealth -= 5;
-            bashstate = false;
+            if (target == "goblin")
+            {
+                goblin.newhealth -= 5;
+            }
+            else if (target == "demon")
+            {
+                demon.TakeDamage(5);
+            }
             animator.SetBool("bash", false);
+            bashstate = false;
+            
         }
 
         if (Input.GetMouseButtonDown(1))
@@ -95,15 +129,28 @@ public class barbarianabilities : MonoBehaviour
             if (Physics.Raycast(ray, out RaycastHit hit))
             {
                 // Check if the clicked object is an enemy
-                if (hit.collider.CompareTag("goblin"))
+                if (hit.collider.CompareTag("goblin") )
                 {
                     goblin = hit.collider.GetComponent<barbarianfollowtarget>();
                     if (goblin.withinrange)
                     {
                         animator.SetBool("bash", true);
-                        
+                        target = "goblin";
                     }
                     
+                }
+
+                if (hit.collider.CompareTag("demon"))
+                {
+                    demon = hit.collider.GetComponent<barbarianDemonController>();
+                    if (demon.withinrange)
+                    {
+                        animator.SetBool("bash", true);
+                        target = "demon";
+                        
+
+                    }
+
                 }
             }
         }
@@ -121,6 +168,35 @@ public class barbarianabilities : MonoBehaviour
             barbariantransform.Rotate(0, -(rotateSpeed * Time.deltaTime), 0);
             
         }
+
+        if (Input.GetKeyDown(KeyCode.F))
+        {
+
+            if (healthpotions > 0)
+            {
+                healthpotions -= 1;
+                newhealth += (health / 2);
+            }
+
+
+        }
+
+        if (runefragments == 3)
+        {
+            portal.SetActive(true);
+        }
+
+        if (newhealth > health)
+        {
+            newhealth = health;
+        }
+    }
+
+    void LateUpdate()
+    {
+        Debug.Log("Maelstorm: " + maelstormstate);
+        
+        
     }
 
     void OnTriggerEnter(Collider other)
@@ -128,10 +204,22 @@ public class barbarianabilities : MonoBehaviour
 
         if (activatecharge)
         {
-            if (other.gameObject.tag != "goblin")
+            if (other.gameObject.tag == "goblin")
+            {
+                goblin = other.GetComponent<barbarianfollowtarget>();
+                goblin.Die();
+            }
+            else if (other.gameObject.tag == "demon")
+            {
+                demon = other.GetComponent<barbarianDemonController>();
+                demon.Die();
+            }
+            else
             {
                 Destroy(other.gameObject);
             }
+            
+            
            
         }
     }
@@ -168,9 +256,14 @@ public class barbarianabilities : MonoBehaviour
     {
         maelstormstate = true;
     }
+    public void antimaelstormdamage()
+    {
+        maelstormstate = false;
+    }
 
     public void bashdamage()
     {
         bashstate = true;
     }
+    
 }

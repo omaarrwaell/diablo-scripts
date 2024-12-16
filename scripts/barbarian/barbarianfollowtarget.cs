@@ -32,11 +32,19 @@ public class barbarianfollowtarget : MonoBehaviour
 
     public bool maelstormgoblin = false;
 
+    public bool dead = false;
+
+    levels level;
+
+
     void Start()
     {
         a = GetComponent<NavMeshAgent>();
 
         GetComponent<NavMeshAgent>().speed = 1.8f;
+
+        barbarian = FindObjectOfType<barbarianabilities>();
+        level = barbarian.GetComponent<levels>();
 
         goblinposition = GetComponent<Transform>();
 
@@ -67,12 +75,27 @@ public class barbarianfollowtarget : MonoBehaviour
             //a.SetDestination(goblinposition.position);
         }
 
+        if (barbarian.maelstormstate)
+        {
+            maelstormgoblin = true;
+        }
+        if (barbarian.maelstormstate == false)
+        {
+            maelstormgoblin = false;
+        }
+
         if (maelstormgoblin && withinrange)
         {
-            newhealth -= 10;
+            newhealth -= 5;
             maelstormgoblin = false;
-            
-            
+            //barbarian.maelstormstate = false;
+
+
+        }
+
+        if (newhealth <= 0f)
+        {
+            Die(); // Handle goblin death (optional)
         }
 
         healthslider.value = (newhealth / health);
@@ -138,7 +161,7 @@ public class barbarianfollowtarget : MonoBehaviour
     public void GobTakeDamage(float damage)
     {
         newhealth -= damage;
-        print("New Health : " + newhealth);
+        Debug.Log("Goblin health: " + newhealth);
         if (newhealth <= 0f)
         {
             Die(); // Handle goblin death (optional)
@@ -147,7 +170,9 @@ public class barbarianfollowtarget : MonoBehaviour
 
     public void Die()
     {
+        dead = true;
         // Handle goblin death (e.g., play animation, destroy object, etc.)
+        level.increaseXp(10);
         Destroy(gameObject);
     }
 

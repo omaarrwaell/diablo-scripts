@@ -22,6 +22,9 @@ public class sorcererunlockabilities : MonoBehaviour
     public TMP_Text clonetext;
     public TMP_Text infernotext;
 
+    public TMP_Text healthbottletext;
+    public TMP_Text runefragmenttext;
+
     public sorcererabilities sabilities;
     public InfernoSpawner ispawner;
     //public fireball fball;
@@ -61,6 +64,9 @@ public class sorcererunlockabilities : MonoBehaviour
             //fireballunlocked = false;
             cooldownfireball();
         }*/
+
+        healthbottletext.text = sabilities.healthpotions.ToString();
+        runefragmenttext.text = sabilities.runefragments.ToString();
 
 
 
@@ -127,7 +133,6 @@ public class sorcererunlockabilities : MonoBehaviour
         while (currCountdownValue > 0)
         {
             text.text = currCountdownValue.ToString();
-            Debug.Log("Countdown: " + currCountdownValue);
             yield return new WaitForSeconds(1.0f);
             currCountdownValue--;
         }

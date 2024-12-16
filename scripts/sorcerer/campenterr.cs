@@ -20,10 +20,12 @@ public class campenterr : MonoBehaviour
     public GameObject cloneskeleton;
     public GameObject skeleton;
 
+    public GameObject runefragment;
+
     private bool following = false;
     void Start()
     {
-
+        runefragment.SetActive(false);
     }
 
     // Update is called once per frame
@@ -53,11 +55,10 @@ public class campenterr : MonoBehaviour
             goblin3follow.target = cloneskeleton.transform;
             goblin4follow.target = cloneskeleton.transform;
             goblin5follow.target = cloneskeleton.transform;
-            
+
         }
         if (sorcerer.exploded == true)
         {
-            Debug.Log("sorcerer exploded");
             goblin1follow.exploded = true;
             goblin2follow.exploded = true;
             goblin3follow.exploded = true;
@@ -80,14 +81,14 @@ public class campenterr : MonoBehaviour
             {
                 demon.isPatrolling = false;
                 demon.isRunning = true;
-              //  Debug.Log($"Demon at index {i} is now running.");
+                //  Debug.Log($"Demon at index {i} is now running.");
             }
             else
             {
                 demon.isPatrolling = true;
                 demon.isRunning = false;
                 demon.isAttacking = false;
-              //  Debug.Log($"Demon at index {i} is now patrolling.");
+                //  Debug.Log($"Demon at index {i} is now patrolling.");
             }
         }
 
@@ -96,7 +97,7 @@ public class campenterr : MonoBehaviour
         {
             if (demons.Count > 0)
             {
-               // RemoveDemon(demons[0]); // Remove the first demon in the list
+                // RemoveDemon(demons[0]); // Remove the first demon in the list
                 demons.Remove(demons[0]);
             }
             else
@@ -105,7 +106,7 @@ public class campenterr : MonoBehaviour
             }
         }
 
-
+        spawnrune();
     }
 
     private void OnTriggerEnter(Collider other)
@@ -143,6 +144,42 @@ public class campenterr : MonoBehaviour
 
             Destroy(demon.gameObject);
         }
+    }
+    private bool demonsdead = true;
+
+    private void spawnrune()
+    {
+        
+        if (goblin1follow.dead && goblin2follow.dead && goblin3follow.dead && goblin4follow.dead && goblin5follow.dead)
+        {
+            Debug.Log("awel if");
+
+            demonsdead = true;
+
+            for (int i = demons.Count - 1; i >= 0; i--) // Iterate backward to handle removal safely
+            {
+                
+
+                Debug.Log("for");
+                var demon = demons[i];
+
+                if (demon.isDead == false)
+                {
+                    demonsdead = false;
+                    //Debug.Log("fih demon mamatsh");
+                }
+
+            }
+           
+            if (demonsdead && runefragment != null)
+            {
+                runefragment.SetActive(true);
+            }
+
+
+        }
+            
+        
     }
 
 

@@ -16,7 +16,7 @@ public class levels : MonoBehaviour
     public TMP_Text xpText;
     public TMP_Text levelText;
     public TMP_Text abilityText;
-    public int currability = 3;
+    public int currability = 0;
 
 
 
@@ -51,7 +51,6 @@ public class levels : MonoBehaviour
         {
             currXp = currXp + xpAmount;
             int prevsum = sum;
-            print("prev:"+prevsum);
 
             if (currXp >= sum)
             {
@@ -61,15 +60,8 @@ public class levels : MonoBehaviour
                 currability += 1;
             }
 
-          
-            
-            print("da el text beta3et slider " + xpText); 
-
         }
        
-        print("da el text beta3et slider " + xpText.text);
-
-        print("curr level:"+currlevel);
-        print("currXp:" + currXp);
+        
     }
 }

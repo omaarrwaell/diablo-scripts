@@ -36,6 +36,7 @@ public class followtarget : MonoBehaviour
     public float newhealth;
     public Slider healthslider;
     public AudioSource sfxAudioSource;
+    public bool dead = false;
 
     public AudioClip GobDies;
 
@@ -66,10 +67,7 @@ public class followtarget : MonoBehaviour
         {
             Debug.LogError("Animator is not assigned in Start!");
         }
-        else
-        {
-            Debug.Log("Animator successfully assigned in Start.");
-        }
+        
 
 
     }
@@ -144,7 +142,6 @@ public class followtarget : MonoBehaviour
         {
             run = true;
             animator.SetBool("attackplayer", false);
-            Debug.Log("not within range");
             withinrange = false;
 
         }
@@ -163,7 +160,6 @@ public class followtarget : MonoBehaviour
     public void GobTakeDamage(float damage)
     {
         newhealth -= damage;
-        print("New Health : " + newhealth);
         if (newhealth <= 0f)
         {
             Die(); // Handle goblin death (optional)
@@ -172,6 +168,7 @@ public class followtarget : MonoBehaviour
 
    public void Die()
     {
+        dead = true;
         // Handle goblin death (e.g., play animation, destroy object, etc.)
         lilithController.OnMinionDeath();
         level.increaseXp(10);

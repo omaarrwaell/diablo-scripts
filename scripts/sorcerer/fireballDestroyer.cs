@@ -1,5 +1,3 @@
-
-
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -33,7 +31,6 @@ public class fireballDestroyer : MonoBehaviour
 
         {
 
-            print("inside if destroy");
 
             followtarget goblin = collision.collider.GetComponent<followtarget>();
             //DemonController demon = collision.collider.GetComponent<DemonController>();
@@ -49,32 +46,10 @@ public class fireballDestroyer : MonoBehaviour
             Destroy(gameObject);
         }
 
-        else if (collision.collider.CompareTag("demon"))
-        {
-            print("colliding with demon");
+        else if (collision.collider.CompareTag("demon")){
             DemonController demon = collision.collider.GetComponent<DemonController>();
             demon.TakeDamage(5f);
 
-            Destroy(gameObject);
-        }
-        if (collision.collider.CompareTag("boss"))
-
-        {
-
-            print("inside if destroy");
-
-            LilithController boss = collision.collider.GetComponent<LilithController>();
-            //DemonController demon = collision.collider.GetComponent<DemonController>();
-            boss.TakeDamage(5);
-            print(boss.currentHealth);
-            //demon.TakeDamage(5f);
-            if (boss.currentHealth <= 0)
-            {
-                boss.Die();
-            }
-
-
-            // Destroy the fireball
             Destroy(gameObject);
         }
         //else if (!collision.collider.CompareTag("terrain"))
@@ -83,6 +58,6 @@ public class fireballDestroyer : MonoBehaviour
         //    Destroy(gameObject);
         //}
 
-
+       
     }
 }

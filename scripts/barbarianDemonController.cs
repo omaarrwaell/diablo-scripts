@@ -4,7 +4,7 @@ using UnityEngine;
 using UnityEngine.AI;
 using UnityEngine.UI;
 
-public class DemonController : MonoBehaviour
+public class barbarianDemonController : MonoBehaviour
 {
     public Transform player; // Player's Transform
     public Transform[] waypoints; // Patrol waypoints
@@ -14,7 +14,7 @@ public class DemonController : MonoBehaviour
     public Transform healthBarTransform; // To face the camera
 
     public Animator animator;
-    public sorcererabilities sorcerer;
+    public barbarianabilities barbarian;
     private float maxHealth = 40f;
     public float currentHealth;
     levels level;
@@ -31,13 +31,14 @@ public class DemonController : MonoBehaviour
     private float attackTimer = 0f;
     private int attackStep = 0; // To manage attack sequence
 
-    public campenterr elcampbeta3y;
+    public bool withinrange = false;
+    public bool maelstormdemon = false;
     void Start()
 
 
     {
 
-        level = sorcerer.GetComponent<levels>();
+        level = barbarian.GetComponent<levels>();
 
         agent = GetComponent<NavMeshAgent>();
         agent.speed = 0.9f;
@@ -74,7 +75,23 @@ public class DemonController : MonoBehaviour
             AttackPlayer();
         }
 
+        if (barbarian.maelstormstate)
+        {
+            maelstormdemon = true;
+        }
+        if (barbarian.maelstormstate == false)
+        {
+            maelstormdemon = false;
+        }
 
+        if (maelstormdemon && withinrange)
+        {
+            TakeDamage(5);
+            maelstormdemon = false;
+            //barbarian.maelstormstate = false;
+
+
+        }
 
     }
 
@@ -82,6 +99,9 @@ public class DemonController : MonoBehaviour
     {
         healthBarTransform.LookAt(Camera.main.transform.position);
     }
+
+
+    
 
     void Patrol()
     {
@@ -168,11 +188,7 @@ public class DemonController : MonoBehaviour
         //animator.SetBool("isDead", true);
 
         // Notify the campentry script to remove this demon
-        
-        if(elcampbeta3y != null)
-        {
-            elcampbeta3y.RemoveDemon(this);
-        }
+
 
         Destroy(gameObject); // Remove demon after death animation plays
         level.increaseXp(30);
@@ -181,21 +197,25 @@ public class DemonController : MonoBehaviour
 
     private void OnTriggerStay(Collider other)
     {
-        
+
 
         if (other.CompareTag("Player"))
         {
             isPatrolling = false;
             isRunning = false;
             isAttacking = true;
+            withinrange = true;
         }
     }
     public void damagePlayer()
     {
-        sorcerer.newhealth -= 10;
-        if (sorcerer.newhealth <= 0)
+        if (barbarian.shieldstate == false && withinrange)
         {
-            sorcerer.newhealth = 0;
+            barbarian.newhealth -= 10;
+        }
+        if (barbarian.newhealth <= 0)
+        {
+            barbarian.newhealth = 0;
         }
     }
 
@@ -208,7 +228,7 @@ public class DemonController : MonoBehaviour
             isAttacking = false;
             attackStep = 0;
             animator.SetInteger("state", 0);
-
+            withinrange = false;
         }
     }
 }

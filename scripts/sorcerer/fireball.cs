@@ -9,7 +9,7 @@ public class fireball : MonoBehaviour
     public float fireballSpeed = 10f; // Speed of the Fireball
     public bool fireballEnabled=true;
     public float cooldownTime = 1f;  // Cooldown time in seconds
-    private float currentCooldownTime = 0f;  // Time remaining on the cooldown
+    private float currentCooldownTime = 1f;  // Time remaining on the cooldown
     public bool fireballactive = false;
 
 
@@ -58,12 +58,9 @@ public class fireball : MonoBehaviour
 
                 if (Physics.Raycast(ray, out RaycastHit hit))
                 {
-                    Debug.Log("Fireball launched at: " + hit.point);
                     // Check if the clicked object is an enemy
-
-                    if (hit.collider.CompareTag("goblin") || hit.collider.CompareTag("demon")|| hit.collider.CompareTag("boss"))
+                    if (hit.collider.CompareTag("goblin") || hit.collider.CompareTag("demon"))
                     {
-                        Debug.Log("Fireball hit a joe!");
                         // Spawn and launch the Fireball
                         //if (fireballEnabled)
                         SpawnFireball(hit.point);
@@ -81,7 +78,6 @@ public class fireball : MonoBehaviour
     {
         // Instantiate the Fireball at the player's position
 
-        print("countss");
         GameObject fireball = Instantiate(fireballahmed, player.transform.position, Quaternion.identity);
         if (fireball == null)
         {

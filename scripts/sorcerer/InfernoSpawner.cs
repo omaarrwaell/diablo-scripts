@@ -24,7 +24,6 @@ public class InfernoSpawner : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.E) && unlockabilities.infernounlocked)
         {
             pressed = true;
-            print("Inferno ability activated: " + pressed);
         }
 
         if (Input.GetMouseButtonDown(1) && pressed) // Right mouse button
@@ -42,7 +41,6 @@ public class InfernoSpawner : MonoBehaviour
 
     void SpawnInferno(Vector3 targetPosition)
     {
-        print("Spawning Inferno at: " + targetPosition);
 
         // Instantiate the Inferno effect at the target position
         GameObject inferno = Instantiate(infernoPrefab, targetPosition, Quaternion.identity);

@@ -7,20 +7,22 @@ public class barbariancampenter : MonoBehaviour
     // Start is called before the first frame update
 
 
+    public List<barbarianDemonController> demons; // List of demons in the camp
 
+    private bool playerDetected = false;
     public barbarianfollowtarget goblin1follow;
     public barbarianfollowtarget goblin2follow;
     public barbarianfollowtarget goblin3follow;
     public barbarianfollowtarget goblin4follow;
     public barbarianfollowtarget goblin5follow;
 
-    public barbarianabilities barbarian;
+
+    public GameObject runefragment;
 
     private bool following = false;
-
     void Start()
     {
-
+        runefragment.SetActive(false);
     }
 
     // Update is called once per frame
@@ -43,48 +45,122 @@ public class barbariancampenter : MonoBehaviour
             goblin5follow.isFollowing = false;
         }
 
-        if (barbarian.maelstormstate == true)
+       
+        
+        for (int i = demons.Count - 1; i >= 0; i--) // Iterate backward to handle removal safely
         {
-            goblin1follow.maelstormgoblin = true;
-            goblin2follow.maelstormgoblin = true;
-            goblin3follow.maelstormgoblin = true;
-            goblin4follow.maelstormgoblin = true;
-            goblin5follow.maelstormgoblin = true;
+            var demon = demons[i];
 
-            barbarian.maelstormstate = false;
+            if (playerDetected && i == 0)
+            {
+                demon.isPatrolling = false;
+                demon.isRunning = true;
+                //  Debug.Log($"Demon at index {i} is now running.");
+            }
+            else
+            {
+                demon.isPatrolling = true;
+                demon.isRunning = false;
+                demon.isAttacking = false;
+                //  Debug.Log($"Demon at index {i} is now patrolling.");
+            }
         }
-        else if (barbarian.maelstormstate == false)
+
+
+        if (Input.GetKeyDown("k"))
         {
-            goblin1follow.maelstormgoblin = false;
-            goblin2follow.maelstormgoblin = false;
-            goblin3follow.maelstormgoblin = false;
-            goblin4follow.maelstormgoblin = false;
-            goblin5follow.maelstormgoblin = false;
+            if (demons.Count > 0)
+            {
+                // RemoveDemon(demons[0]); // Remove the first demon in the list
+                demons.Remove(demons[0]);
+            }
+            else
+            {
+                Debug.Log("No demons to remove.");
+            }
         }
 
-
-
-
+        spawnrune();
     }
 
     private void OnTriggerEnter(Collider other)
     {
-        if (other.gameObject.tag == "Player")
+        if (other.gameObject.tag == "Player" || other.gameObject.tag == "clone")
         {
             following = true;
 
+        }
+        if (other.CompareTag("Player"))
+        {
+            playerDetected = true;
         }
     }
 
     private void OnTriggerExit(Collider other)
     {
-        if (other.gameObject.tag == "Player")
+        if (other.gameObject.tag == "Player" || other.gameObject.tag == "clone")
         {
             following = false;
 
         }
+        if (other.CompareTag("Player"))
+        {
+            playerDetected = false;
+        }
+    }
+
+    public void RemoveDemon(barbarianDemonController demon)
+    {
+        if (demons.Contains(demon))
+        {
+            demons.Remove(demon);
+            Debug.Log($"Demon removed. Remaining demons: {demons.Count}");
+
+            Destroy(demon.gameObject);
+        }
+    }
+    private bool demonsdead = true;
+
+    private void spawnrune()
+    {
+
+        if (goblin1follow.dead && goblin2follow.dead && goblin3follow.dead && goblin4follow.dead && goblin5follow.dead)
+        {
+            Debug.Log("awel if");
+
+            demonsdead = true;
+
+            for (int i = demons.Count - 1; i >= 0; i--) // Iterate backward to handle removal safely
+            {
+
+
+                Debug.Log("for");
+                var demon = demons[i];
+
+                if (demon.isDead == false)
+                {
+                    demonsdead = false;
+                    Debug.Log("fih demon mamatsh");
+                }
+
+            }
+
+            if (demonsdead && runefragment != null)
+            {
+                runefragment.SetActive(true);
+            }
+
+
+        }
+
+
     }
 
 
 
+
 }
+
+
+
+
